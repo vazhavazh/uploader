@@ -156,8 +156,8 @@ export const MultiUploader = ({ labels, tooltips = [] }: UploaderProps) => {
 	const [status, setStatus] = useState<UploadStatus>("idle");
 	const [uploadProgress, setUploadProgress] = useState(0);
 	// const [visible, setVisible] = useState(false);
-	
-    // Обработчик изменений для каждого инпута
+
+	// Обработчик изменений для каждого инпута
 	function handleChange(index: number) {
 		return (e: ChangeEvent<HTMLInputElement>) => {
 			if (e.target.files && e.target.files[0]) {
@@ -178,7 +178,7 @@ export const MultiUploader = ({ labels, tooltips = [] }: UploaderProps) => {
 		setUploadProgress(0);
 
 		const formData = new FormData();
-		files.forEach((file) => formData.append("files", file)); // Добавляем все файлы в FormData
+		files.forEach((file) => formData.append("files", file));
 
 		try {
 			await axios.post("https://httpbin.org/post", formData, {
@@ -222,7 +222,7 @@ export const MultiUploader = ({ labels, tooltips = [] }: UploaderProps) => {
 							)}
 							// onMouseEnter={() => setVisible(true)}
 							// onMouseLeave={() => setVisible(false)}
-                            >
+						>
 							{label}
 							{tooltips[index] && (
 								<span className='absolute left-1/2 top-full z-50 mt-2 w-max -translate-x-1/2 rounded-lg bg-gray-800 px-3 py-1 text-sm text-white shadow-lg transition-opacity duration-300 opacity-100'>
