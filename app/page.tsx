@@ -1,4 +1,4 @@
-import { MultiUploader } from "@/components/Uploader";
+import { MultiUploader } from "@/components/MultiUploader";
 
 export default function Home() {
 	const labels = ["label1", "label2", "label3"];
