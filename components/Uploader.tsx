@@ -57,6 +57,7 @@
 // 			console.error(error);
 // 		}
 // 	}
+
 // 	return (
 // 		<div className='space-y-2'>
 // 			<input
@@ -68,20 +69,19 @@
 // 				<p
 // 					className={cn(
 // 						"text-green-600",
-// 						tooltip && "cursor-pointer text-red-600 underline"
+// 						tooltip && "cursor-pointer text-red-600 underline relative"
 // 					)}
-// 					onMouseEnter={() => {
-// 						setVisible(true);
-// 					}}
+// 					onMouseEnter={() => setVisible(true)}
 // 					onMouseLeave={() => setVisible(false)}>
 // 					{label}
+// 					{tooltip && visible && (
+// 						<span className='absolute left-1/2 top-full z-50 mt-2 w-max -translate-x-1/2 rounded-lg bg-gray-800 px-3 py-1 text-sm text-white shadow-lg transition-opacity duration-300 opacity-100'>
+// 							{tooltip}
+// 						</span>
+// 					)}
 // 				</p>
-// 				{visible && (
-// 					<div className='absolute left-1/2 top-full mt-2 w-max -translate-x-1/2 rounded-lg bg-gray-800 px-3 py-1 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-// 						{tooltip}
-// 					</div>
-// 				)}
 // 			</div>
+
 // 			{file && (
 // 				<div className='mb-4 text-sm'>
 // 					<p>File name: {file.name}</p>
@@ -135,6 +135,7 @@
 // 		</div>
 // 	);
 // };
+
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -143,35 +144,41 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 
 interface UploaderProps {
-	label: string;
-	tooltip?: string;
+	labels: string[]; // Массив меток для каждого инпута
+	tooltips?: string[]; // Опциональный массив подсказок для каждого инпута
 }
 
 type UploadStatus = "idle" | "uploading" | "success" | "error";
 
-export const Uploader = ({ label, tooltip }: UploaderProps) => {
-	const [file, setFile] = useState<File | null>(null);
-	const [preview, setPreview] = useState<string | null>(null);
+export const MultiUploader = ({ labels, tooltips = [] }: UploaderProps) => {
+	const [files, setFiles] = useState<File[]>([]);
+	const [previews, setPreviews] = useState<string[]>([]);
 	const [status, setStatus] = useState<UploadStatus>("idle");
 	const [uploadProgress, setUploadProgress] = useState(0);
-	const [visible, setVisible] = useState(false);
+	// const [visible, setVisible] = useState(false);
+	
+    // Обработчик изменений для каждого инпута
+	function handleChange(index: number) {
+		return (e: ChangeEvent<HTMLInputElement>) => {
+			if (e.target.files && e.target.files[0]) {
+				const selectedFile = e.target.files[0];
+				const newFiles = [...files];
+				newFiles[index] = selectedFile;
+				setFiles(newFiles);
 
-	function handleChange(e: ChangeEvent<HTMLInputElement>) {
-		if (e.target.files) {
-			const selectedFile = e.target.files[0];
-			setFile(selectedFile);
-			setPreview(URL.createObjectURL(selectedFile));
-		}
+				const newPreviews = [...previews];
+				newPreviews[index] = URL.createObjectURL(selectedFile);
+				setPreviews(newPreviews);
+			}
+		};
 	}
 
 	async function handleFileUpload() {
-		if (!file) return;
-
 		setStatus("uploading");
 		setUploadProgress(0);
 
 		const formData = new FormData();
-		formData.append("file", file);
+		files.forEach((file) => formData.append("files", file)); // Добавляем все файлы в FormData
 
 		try {
 			await axios.post("https://httpbin.org/post", formData, {
@@ -197,49 +204,57 @@ export const Uploader = ({ label, tooltip }: UploaderProps) => {
 
 	return (
 		<div className='space-y-2'>
-			<input
-				type='file'
-				onChange={handleChange}
-				className='mr-2'
-			/>
-			<div className='relative inline-block'>
-				<p
-					className={cn(
-						"text-green-600",
-						tooltip && "cursor-pointer text-red-600 underline relative"
-					)}
-					onMouseEnter={() => setVisible(true)}
-					onMouseLeave={() => setVisible(false)}>
-					{label}
-					{tooltip && visible && (
-						<span className='absolute left-1/2 top-full z-50 mt-2 w-max -translate-x-1/2 rounded-lg bg-gray-800 px-3 py-1 text-sm text-white shadow-lg transition-opacity duration-300 opacity-100'>
-							{tooltip}
-						</span>
-					)}
-				</p>
-			</div>
-
-			{file && (
-				<div className='mb-4 text-sm'>
-					<p>File name: {file.name}</p>
-					<p>Size: {(file.size / 1024).toFixed(2)} KB</p>
-					<p>Type: {file.type}</p>
-				</div>
-			)}
-
-			{preview && (
-				<div className='mb-4'>
-					<p className='text-sm'>Image preview:</p>
-					<div className='relative h-[200px] w-auto'>
-						<Image
-							src={preview}
-							alt='Selected file'
-							fill
-							className='rounded border border-gray-300 object-contain'
-						/>
+			{labels.map((label, index) => (
+				<div
+					key={index}
+					className='space-y-2'>
+					<input
+						type='file'
+						onChange={handleChange(index)}
+						className='mr-2'
+					/>
+					<div className='relative inline-block'>
+						<p
+							className={cn(
+								"text-green-600",
+								tooltips[index] &&
+									"cursor-pointer text-red-600 underline relative"
+							)}
+							// onMouseEnter={() => setVisible(true)}
+							// onMouseLeave={() => setVisible(false)}
+                            >
+							{label}
+							{tooltips[index] && (
+								<span className='absolute left-1/2 top-full z-50 mt-2 w-max -translate-x-1/2 rounded-lg bg-gray-800 px-3 py-1 text-sm text-white shadow-lg transition-opacity duration-300 opacity-100'>
+									{tooltips[index]}
+								</span>
+							)}
+						</p>
 					</div>
+
+					{files[index] && (
+						<div className='mb-4 text-sm'>
+							<p>File name: {files[index].name}</p>
+							<p>Size: {(files[index].size / 1024).toFixed(2)} KB</p>
+							<p>Type: {files[index].type}</p>
+						</div>
+					)}
+
+					{previews[index] && (
+						<div className='mb-4'>
+							<p className='text-sm'>Image preview:</p>
+							<div className='relative h-[200px] w-auto'>
+								<Image
+									src={previews[index]}
+									alt={`Selected file ${index}`}
+									fill
+									className='rounded border border-gray-300 object-contain'
+								/>
+							</div>
+						</div>
+					)}
 				</div>
-			)}
+			))}
 
 			{status === "uploading" && (
 				<div className='space-y-2'>
@@ -254,16 +269,18 @@ export const Uploader = ({ label, tooltip }: UploaderProps) => {
 				</div>
 			)}
 
-			{file && status !== "uploading" && (
+			{files.length > 0 && status !== "uploading" && (
 				<button
 					onClick={handleFileUpload}
 					className='bg-yellow-600 px-2 rounded'>
-					Upload
+					Upload All
 				</button>
 			)}
 
 			{status === "success" && (
-				<p className='text-sm text-green-600'>File upload successfully!</p>
+				<p className='text-sm text-green-600'>
+					All files uploaded successfully!
+				</p>
 			)}
 
 			{status === "error" && (
