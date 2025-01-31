@@ -128,12 +128,12 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 	}
 
 	return (
-		<div className='space-y-2'>
+		<div className='space-y-2 '>
 			{details.map((detailObj) => {
 				return (
 					<div
 						key={detailObj.label}
-						className='space-y-2'>
+						className='space-y-2 '>
 						{detailObj.tooltip ? (
 							<>
 								<Accordion
@@ -141,7 +141,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 									collapsible>
 									<AccordionItem value='item-1'>
 										<AccordionTrigger>
-											<h2>{`${detailObj.id} ${detailObj.label}`}</h2>
+											<h2 className='text-base'>{`${detailObj.id} ${detailObj.label}`}</h2>
 										</AccordionTrigger>
 										<AccordionContent>{detailObj.tooltip}</AccordionContent>
 									</AccordionItem>
@@ -151,13 +151,45 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 							<h2>{`${detailObj.id} ${detailObj.label}`}</h2>
 						)}
 						{/* Основной инпут */}
-						{!detailObj.title && (
+						{/* {!detailObj.title && (
 							<label>
 								<input
 									type='file'
 									name={detailObj.label}
 									onChange={handleChange(detailObj.label)}
 								/>
+							</label>
+						)} */}
+						{!detailObj.title && (
+							<label className='flex bg-[#488aec] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
+								<input
+								className="hidden opacity-0"
+									type='file'
+									name={detailObj.label}
+									onChange={handleChange(detailObj.label)}
+								/>
+								<svg
+									className='w-5 h-5'
+									aria-hidden='true'
+									stroke='currentColor'
+									strokeWidth='2'
+									viewBox='0 0 24 24'
+									fill='none'
+									xmlns='http://www.w3.org/2000/svg'>
+									<path
+										strokeWidth='2'
+										stroke='#fffffff'
+										d='M13.5 3H12H8C6.34315 3 5 4.34315 5 6V18C5 19.6569 6.34315 21 8 21H11M13.5 3L19 8.625M13.5 3V7.625C13.5 8.17728 13.9477 8.625 14.5 8.625H19M19 8.625V11.8125'
+										strokeLinejoin='round'
+										strokeLinecap='round'></path>
+									<path
+										strokeLinejoin='round'
+										strokeLinecap='round'
+										strokeWidth='2'
+										stroke='#fffffff'
+										d='M17 15V18M17 21V18M17 18H14M17 18H20'></path>
+								</svg>
+								ADD FILE
 							</label>
 						)}
 
