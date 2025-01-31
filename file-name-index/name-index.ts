@@ -98,6 +98,7 @@ export const lifeboatDetailsArray = [
   .31 thermal protective aids complying with the requirements of section 2.5 sufficient for 10% of the number of persons the lifeboat is permitted to accommodate or two whichever is the greater; and
 
   .32 in the case of ships engaged on voyages of such a nature and duration that in the opinion of the Administration, the items specified in paragraphs 4.4.8.12 and 4.4.8.26 are unnecessary, the Administration may allow these items to be dispensed with.`,
+		title: true,
 	},
 	{ id: "12.1", label: "buoyant oars, thole pins, crutches" },
 	{ id: "12.2", label: "two boat-hooks" },
@@ -175,6 +176,7 @@ export const rescueBoatDetailsArray = [
 .13 thermal protective aids complying with the requirements of section 2.5 sufficient for 10% of the number of persons the rescue boat is permitted to accommodate or two, whichever is the greater; and
 
 .14 portable fire-extinguishing equipment of an approved type suitable for extinguishing oil fires`,
+		title: true,
 	},
 	{ id: "2.1", label: "buoyant oars or paddles, thole pins, crutches" },
 	{ id: "2.2", label: "buoyant bailer" },
@@ -288,6 +290,7 @@ Each production lifeboat shall be provided with a certificate or declaration of 
 .6 list of sources of spare parts; and
 
 .7 log for records of inspections and maintenance.`,
+		title: true,
 	},
 	{ id: "5.1", label: "checklist for use when carrying out the inspections" },
 	{ id: "5.2", label: "maintenance and repair instructions" },
