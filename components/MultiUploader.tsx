@@ -126,14 +126,15 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 					<div
 						key={detailObj.label}
 						className='space-y-2'>
-						{/* <h2>{`${detailObj.id} ${detailObj.label}`}</h2> */}
 						{detailObj.tooltip ? (
 							<>
 								<Accordion
 									type='single'
 									collapsible>
 									<AccordionItem value='item-1'>
-										<AccordionTrigger>{`${detailObj.id} ${detailObj.label}`}</AccordionTrigger>
+										<AccordionTrigger>
+											<h2>{`${detailObj.id} ${detailObj.label}`}</h2>
+										</AccordionTrigger>
 										<AccordionContent>{detailObj.tooltip}</AccordionContent>
 									</AccordionItem>
 								</Accordion>
@@ -198,11 +199,13 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 						)}
 
 						{/* Кнопка для добавления нового инпута */}
-						<button
-							onClick={() => addExtraInput(detailObj.label)}
-							className='mt-2 px-2 py-1 bg-blue-500 text-white rounded'>
-							Добавить инпут
-						</button>
+						{!detailObj.title && (
+							<button
+								onClick={() => addExtraInput(detailObj.label)}
+								className='mt-2 px-2 py-1 bg-blue-500 text-white rounded'>
+								Добавить инпут
+							</button>
+						)}
 					</div>
 				);
 			})}

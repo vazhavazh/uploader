@@ -1,6 +1,6 @@
 import { MultiUploader } from "@/components/MultiUploader";
-import { requiredVideosArray } from "@/file-name-index/name-index";
-// import { lifeboatDetailsArray, requiredVideosArray } from "@/file-name-index/name-index";
+// import { requiredVideosArray } from "@/file-name-index/name-index";
+import { lifeboatDetailsArray, requiredVideosArray } from "@/file-name-index/name-index";
 
 
 export default function Home() {
@@ -9,8 +9,12 @@ export default function Home() {
 	return (
 		<>
 			{/* <MultiUploader labels={labels} /> */}
-			{/* <MultiUploader details={lifeboatDetailsArray} /> */}
-			<MultiUploader details={requiredVideosArray} />
+
+			<header className='bg-slate-600 fixed top-0 h-16 w-full'></header>
+			<div className='bg-slate-200 mt-16 px-4'>
+				<MultiUploader details={requiredVideosArray} />
+				<MultiUploader details={lifeboatDetailsArray} />
+			</div>
 		</>
 	);
 }
