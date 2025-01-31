@@ -4,7 +4,7 @@
 import { DetailObj } from "@/types/detail-obj";
 import axios from "axios";
 import Image from "next/image";
-import { ChangeEvent,  useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import {
 	Accordion,
@@ -25,6 +25,9 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 	const [status, setStatus] = useState<UploadStatus>("idle");
 	const [uploadProgress, setUploadProgress] = useState(0);
 	const [extraInputs, setExtraInputs] = useState<{ [label: string]: number }>(
+		{}
+	);
+	const [fileNames, setFileNames] = useState<{ [fileName: string]: string }>(
 		{}
 	);
 
@@ -53,11 +56,13 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 	// 		}
 	// 	};
 	// }
-	function handleChange(name: string, index?: number) {
+	function handleChange(label: string, index?: number) {
 		return (e: ChangeEvent<HTMLInputElement>) => {
 			if (e.target.files && e.target.files[0]) {
 				const selectedFile = e.target.files[0];
-				const key = index !== undefined ? `${name}_${index}` : name; // Генерируем уникальный ключ
+				const key = index !== undefined ? `${label}_${index}` : label; // Генерируем уникальный ключ
+
+				const fileName = selectedFile.name;
 
 				// Очистка старого preview (важно для предотвращения утечек памяти)
 				if (previews[key]) {
@@ -75,6 +80,11 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 						selectedFile.type === "application/pdf"
 							? "/assets/img/pdf.png"
 							: URL.createObjectURL(selectedFile),
+				}));
+
+				setFileNames((prev) => ({
+					...prev,
+					[key]: fileName,
 				}));
 			}
 		};
@@ -117,8 +127,6 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 		}));
 	}
 
-
-
 	return (
 		<div className='space-y-2'>
 			{details.map((detailObj) => {
@@ -153,6 +161,13 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 							</label>
 						)}
 
+						{/* Отображение имени файла для основного инпута */}
+						{fileNames[detailObj.label] && (
+							<p className='text-sm text-red-600'>
+								Selected file: {fileNames[detailObj.label]}
+							</p>
+						)}
+
 						{/* Дополнительные инпуты */}
 						{Array.from({ length: extraInputs[detailObj.label] || 0 }).map(
 							(_, index) => (
@@ -166,6 +181,14 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 											onChange={handleChange(detailObj.label, index)}
 										/>
 									</label>
+
+									{/* Отображение имени файла для дополнительного инпута */}
+									{fileNames[`${detailObj.label}_${index}`] && (
+										<p className='text-sm text-red-600'>
+											Selected file: {fileNames[`${detailObj.label}_${index}`]}
+										</p>
+									)}
+
 									{/* Превью для дополнительного инпута */}
 									{previews[`${detailObj.label}_${index}`] && (
 										<div className='mb-4'>
@@ -183,6 +206,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 								</div>
 							)
 						)}
+
 						{/* Превью для основного инпута */}
 						{previews[detailObj.label] && (
 							<div className='mb-4'>
