@@ -1,4 +1,3 @@
-
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -83,11 +82,13 @@ export const MultiUploader = ({ labels, tooltips = [] }: UploaderProps) => {
 					<div
 						key={name}
 						className='space-y-2'>
-						<input
-							type='file'
-							name={name}
-							onChange={handleChange(name)}
-						/>
+						<label>
+							<input
+								type='file'
+								name={name}
+								onChange={handleChange(name)}
+							/>
+						</label>
 						<div className='relative inline-block'>
 							<p
 								className={cn(
