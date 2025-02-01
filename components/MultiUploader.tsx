@@ -4,9 +4,8 @@
 import { DetailObj } from "@/types/detail-obj";
 import axios from "axios";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { ToastAction } from "./ui/toast";
-
 
 import {
 	Accordion,
@@ -34,30 +33,65 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 		{}
 	);
 
-	function handleChange(label: string, index?: number) {
-		return (e: ChangeEvent<HTMLInputElement>) => {
+	// function handleChange(label: string, index?: number) {
+	// 	return (e: ChangeEvent<HTMLInputElement>) => {
+	// 		if (e.target.files && e.target.files[0]) {
+	// 			const selectedFile = e.target.files[0];
+	// 			const key = index !== undefined ? `${label}_${index}` : label; // Генерируем уникальный ключ
+
+	// 			const fileName = selectedFile.name;
+
+	// 			// Очистка старого preview (важно для предотвращения утечек памяти)
+	// 			if (previews[key]) {
+	// 				URL.revokeObjectURL(previews[key]);
+	// 			}
+
+	// 			setFiles((prev) => ({
+	// 				...prev,
+	// 				[key]: selectedFile,
+	// 			}));
+
+	// 			setPreviews((prev) => ({
+	// 				...prev,
+	// 				[key]:
+	// 					selectedFile.type === "application/pdf"
+	// 						? "/assets/img/pdf.png"
+	// 						: URL.createObjectURL(selectedFile),
+	// 			}));
+
+	// 			setFileNames((prev) => ({
+	// 				...prev,
+	// 				[key]: fileName,
+	// 			}));
+	// 		}
+	// 	};
+	// }
+
+	const handleChange = useCallback(
+		(label: string, index?: number) => (e: ChangeEvent<HTMLInputElement>) => {
 			if (e.target.files && e.target.files[0]) {
 				const selectedFile = e.target.files[0];
-				const key = index !== undefined ? `${label}_${index}` : label; // Генерируем уникальный ключ
+				const key = index !== undefined ? `${label}_${index}` : label;
 
 				const fileName = selectedFile.name;
 
-				// Очистка старого preview (важно для предотвращения утечек памяти)
-				if (previews[key]) {
-					URL.revokeObjectURL(previews[key]);
-				}
+				// Очистка старого preview
+				setPreviews((prev) => {
+					if (prev[key]) {
+						URL.revokeObjectURL(prev[key]);
+					}
+					return {
+						...prev,
+						[key]:
+							selectedFile.type === "application/pdf"
+								? "/assets/img/pdf.png"
+								: URL.createObjectURL(selectedFile),
+					};
+				});
 
 				setFiles((prev) => ({
 					...prev,
 					[key]: selectedFile,
-				}));
-
-				setPreviews((prev) => ({
-					...prev,
-					[key]:
-						selectedFile.type === "application/pdf"
-							? "/assets/img/pdf.png"
-							: URL.createObjectURL(selectedFile),
 				}));
 
 				setFileNames((prev) => ({
@@ -65,7 +99,31 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 					[key]: fileName,
 				}));
 			}
-		};
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[previews] // Завися только от previews
+	);
+
+	// function addExtraInput(label: string) {
+	// 	setExtraInputs((prev) => ({
+	// 		...prev,
+	// 		[label]: (prev[label] || 0) + 1, // Увеличиваем количество инпутов для конкретного label
+	// 	}));
+	// }
+	const addExtraInput = useCallback((label: string) => {
+		setExtraInputs((prev) => ({
+			...prev,
+			[label]: (prev[label] || 0) + 1,
+		}));
+	}, []);
+
+	function resetUploader() {
+		setFiles({});
+		setPreviews({});
+		setStatus("idle");
+		setUploadProgress(0);
+		setExtraInputs({});
+		setFileNames({});
 	}
 
 	async function handleFileUpload() {
@@ -95,6 +153,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 				title: "Well done!",
 				description: "All files uploaded successfully.",
 			});
+			resetUploader();
 		} catch (error) {
 			setStatus("error");
 			setUploadProgress(0);
@@ -107,15 +166,6 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 			});
 		}
 	}
-
-	function addExtraInput(label: string) {
-		setExtraInputs((prev) => ({
-			...prev,
-			[label]: (prev[label] || 0) + 1, // Увеличиваем количество инпутов для конкретного label
-		}));
-	}
-
-
 
 	return (
 		<div className='space-y-6'>
