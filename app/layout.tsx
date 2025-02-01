@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import SeaCloud from "@/assets/svg/logo.svg";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,13 @@ export default function RootLayout({
 		<html lang='en'>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-300`}>
+				<div className='bg-slate-900 fixed z-50 top-0 w-full h-16 md:h-20'>
+					<div className='flex justify-center'>
+						<div className='w-16 md:w-20'>
+							<SeaCloud />
+						</div>
+					</div>
+				</div>
 				<main>{children}</main>
 				<Toaster />
 			</body>

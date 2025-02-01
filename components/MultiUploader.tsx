@@ -14,6 +14,7 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 interface UploaderProps {
 	details: DetailObj[];
@@ -191,7 +192,11 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 				return (
 					<div
 						key={detailObj.label}
-						className='space-y-3 '>
+						className={cn(
+							"space-y-3",
+							previews[detailObj.label] &&
+								"md:flex flex-wrap gap-5 items-center"
+						)}>
 						{detailObj.tooltip ? (
 							<>
 								<Accordion
@@ -208,97 +213,108 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 								</Accordion>
 							</>
 						) : (
-							<p>{`${detailObj.id} ${detailObj.label}`}</p>
+							<p className="w-full">{`${detailObj.id} ${detailObj.label}`}</p>
 						)}
 
-						{/* Отображение имени файла для основного инпута */}
-						{fileNames[detailObj.label] && (
-							<p className='text-sm font-bold text-red-600 text-center'>
-								Selected file: {fileNames[detailObj.label]}
-							</p>
-						)}
-						{/* Превью для основного инпута */}
-						{previews[detailObj.label] && (
-							<div className='mb-4'>
-								{/* <p className='text-sm'>Preview:</p> */}
-								<div className='relative h-[200px] w-auto'>
-									<Image
-										src={previews[detailObj.label]}
-										alt={`Selected file ${detailObj.label}`}
-										fill
-										className='rounded border border-gray-300 object-contain'
-									/>
+						<div
+							className={cn(
+								"block  ",
+								previews[detailObj.label] &&
+									"border-2 border-slate-900 rounded-xl p-1 md:p-3 md:w-[calc(50%-10px)] md:h-[22rem] md:flex md:flex-col "
+							)}>
+							{/* Отображение имени файла для основного инпута */}
+							{fileNames[detailObj.label] && (
+								<p className='text-sm font-bold text-red-600 text-center mb-2 md:mb-auto'>
+									Selected file: {fileNames[detailObj.label]}
+								</p>
+							)}
+							{/* Превью для основного инпута */}
+							{previews[detailObj.label] && (
+								<div className='mb-4'>
+									{/* <p className='text-sm'>Preview:</p> */}
+									<div className='relative h-[200px]  w-auto'>
+										<Image
+											src={previews[detailObj.label]}
+											alt={`Selected file ${detailObj.label}`}
+											fill
+											className='rounded border border-gray-300 object-contain'
+										/>
+									</div>
 								</div>
-							</div>
-						)}
+							)}
 
-						{/* Основной инпут */}
-						{!detailObj.title && (
-							<div className='flex justify-center'>
-								<label className='min-w-[250px] max-w-[250px] justify-center flex bg-[#488aec] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
-									<input
-										className='hidden opacity-0'
-										type='file'
-										name={detailObj.label}
-										onChange={handleChange(detailObj.label)}
-									/>
-									<svg
-										className='w-5 h-5'
-										version='1.0'
-										xmlns='http://www.w3.org/2000/svg'
-										width='512.000000pt'
-										height='512.000000pt'
-										viewBox='0 0 512.000000 512.000000'
-										preserveAspectRatio='xMidYMid meet'>
-										<g
-											transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'
-											fill='#ffffff'
-											stroke='none'>
-											<path
-												d='M661 4784 c-141 -38 -260 -148 -315 -292 l-21 -57 -3 -1440 c-2
-	-1012 0 -1457 8 -1497 26 -136 113 -258 231 -322 104 -58 68 -56 1241 -56
-	l1078 0 0 160 0 160 -1069 0 -1068 0 -34 23 c-73 49 -69 -15 -69 1020 l0 927
-	1760 0 1760 0 0 -585 0 -585 160 0 160 0 0 840 c0 572 -4 856 -11 892 -29 140
-	-127 264 -258 327 l-76 36 -842 5 -842 5 -271 210 c-149 116 -285 218 -303
-	228 -29 16 -77 17 -597 16 -461 0 -575 -3 -619 -15z m1376 -523 c155 -120 290
-	-223 300 -227 10 -5 406 -11 880 -14 l861 -5 27 -25 c42 -38 55 -80 55 -175
-	l0 -85 -1760 0 -1760 0 0 318 c0 354 2 364 69 409 l34 23 506 0 506 0 282
-	-219z'
-											/>
-											<path
-												d='M3135 2546 c-41 -18 -83 -69 -90 -109 -9 -47 183 -1994 200 -2026 43
-	-84 139 -114 220 -68 35 20 65 64 247 362 114 187 213 343 220 347 7 4 180 18
-	385 31 420 27 422 28 462 111 36 74 22 136 -45 196 -87 78 -1454 1151 -1479
-	1160 -36 14 -84 12 -120 -4z m671 -827 c217 -172 391 -315 387 -319 -4 -4 -95
-	-12 -201 -19 -114 -6 -207 -17 -226 -25 -42 -17 -52 -31 -166 -219 -52 -86
-	-96 -154 -98 -152 -3 3 -102 996 -102 1028 0 9 3 17 6 17 3 0 183 -140 400
-	-311z'
-											/>
-										</g>
-									</svg>
-									SELECT FILE
-								</label>
-							</div>
-						)}
+							{/* Основной инпут */}
+							{!detailObj.title && (
+								<div className='flex justify-center mt-auto'>
+									<label className='min-w-[250px] max-w-[250px] justify-center flex bg-[#488aec] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
+										<input
+											className='hidden opacity-0'
+											type='file'
+											name={detailObj.label}
+											onChange={handleChange(detailObj.label)}
+										/>
+										<svg
+											className='w-5 h-5'
+											version='1.0'
+											xmlns='http://www.w3.org/2000/svg'
+											width='512.000000pt'
+											height='512.000000pt'
+											viewBox='0 0 512.000000 512.000000'
+											preserveAspectRatio='xMidYMid meet'>
+											<g
+												transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'
+												fill='#ffffff'
+												stroke='none'>
+												<path
+													d='M661 4784 c-141 -38 -260 -148 -315 -292 l-21 -57 -3 -1440 c-2
+		-1012 0 -1457 8 -1497 26 -136 113 -258 231 -322 104 -58 68 -56 1241 -56
+		l1078 0 0 160 0 160 -1069 0 -1068 0 -34 23 c-73 49 -69 -15 -69 1020 l0 927
+		1760 0 1760 0 0 -585 0 -585 160 0 160 0 0 840 c0 572 -4 856 -11 892 -29 140
+		-127 264 -258 327 l-76 36 -842 5 -842 5 -271 210 c-149 116 -285 218 -303
+		228 -29 16 -77 17 -597 16 -461 0 -575 -3 -619 -15z m1376 -523 c155 -120 290
+		-223 300 -227 10 -5 406 -11 880 -14 l861 -5 27 -25 c42 -38 55 -80 55 -175
+		l0 -85 -1760 0 -1760 0 0 318 c0 354 2 364 69 409 l34 23 506 0 506 0 282
+		-219z'
+												/>
+												<path
+													d='M3135 2546 c-41 -18 -83 -69 -90 -109 -9 -47 183 -1994 200 -2026 43
+		-84 139 -114 220 -68 35 20 65 64 247 362 114 187 213 343 220 347 7 4 180 18
+		385 31 420 27 422 28 462 111 36 74 22 136 -45 196 -87 78 -1454 1151 -1479
+		1160 -36 14 -84 12 -120 -4z m671 -827 c217 -172 391 -315 387 -319 -4 -4 -95
+		-12 -201 -19 -114 -6 -207 -17 -226 -25 -42 -17 -52 -31 -166 -219 -52 -86
+		-96 -154 -98 -152 -3 3 -102 996 -102 1028 0 9 3 17 6 17 3 0 183 -140 400
+		-311z'
+												/>
+											</g>
+										</svg>
+										SELECT FILE
+									</label>
+								</div>
+							)}
+						</div>
 
 						{/* Дополнительные инпуты */}
 						{Array.from({ length: extraInputs[detailObj.label] || 0 }).map(
 							(_, index) => (
 								<div
 									key={`${detailObj.label}_extra_${index}`}
-									className='block'>
+									className={cn(
+										"block  ",
+										previews[`${detailObj.label}_${index}`] &&
+											"border-2 border-slate-900 rounded-xl p-1 md:p-3 md:w-[calc(50%-10px)] md:h-[22rem] md:flex md:flex-col"
+									)}>
 									{/* Отображение имени файла для дополнительного инпута */}
 									{fileNames[`${detailObj.label}_${index}`] && (
-										<p className='text-sm font-bold text-red-600 text-center mb-2'>
+										<p className='text-sm font-bold text-red-600 text-center mb-2 md:mb-auto'>
 											Selected file: {fileNames[`${detailObj.label}_${index}`]}
 										</p>
 									)}
 
 									{/* Превью для дополнительного инпута */}
+
 									{previews[`${detailObj.label}_${index}`] && (
 										<div className='mb-4'>
-											{/* <p className='text-sm'>Preview:</p> */}
-											<div className='relative h-[200px] w-auto'>
+											<div className='relative h-[200px]  w-auto'>
 												<Image
 													src={previews[`${detailObj.label}_${index}`]}
 													alt={`Selected file ${detailObj.label}_${index}`}
@@ -310,7 +326,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 									)}
 
 									{/*Дополнительный инпут */}
-									<div className='flex justify-center'>
+									<div className='flex justify-center mt-auto'>
 										<label className='min-w-[250px] max-w-[250px] justify-center flex bg-[#488aec] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
 											<input
 												className='hidden opacity-0'
