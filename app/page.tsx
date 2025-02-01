@@ -1,6 +1,6 @@
 import { MultiUploader } from "@/components/MultiUploader";
 import { requiredVideosArray } from "@/file-name-index/name-index";
-// import { lifeboatDetailsArray, requiredVideosArray } from "@/file-name-index/name-index";
+// import { lifeboatDetailsArray} from "@/file-name-index/name-index";
 import SeaCloud from "@/assets/svg/logo.svg";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
 					</div>
 				</div>
 			</div>
-			<div className='bg-slate-200 mt-16 px-4 '>
+			<div className='  mt-16 px-4 pb-5'>
 				<MultiUploader details={requiredVideosArray} />
 				{/* <MultiUploader details={lifeboatDetailsArray} /> */}
 			</div>
