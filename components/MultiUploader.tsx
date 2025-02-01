@@ -5,6 +5,8 @@ import { DetailObj } from "@/types/detail-obj";
 import axios from "axios";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
+import { ToastAction } from "./ui/toast";
+
 
 import {
 	Accordion,
@@ -12,6 +14,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { toast } from "@/hooks/use-toast";
 
 interface UploaderProps {
 	details: DetailObj[];
@@ -31,31 +34,6 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 		{}
 	);
 
-	// function handleChange(name: string) {
-	// 	return (e: ChangeEvent<HTMLInputElement>) => {
-	// 		if (e.target.files && e.target.files[0]) {
-	// 			const selectedFile = e.target.files[0];
-
-	// 			// Очистка старого preview (важно для предотвращения утечек памяти)
-	// 			if (previews[name]) {
-	// 				URL.revokeObjectURL(previews[name]);
-	// 			}
-
-	// 			setFiles((prev) => ({
-	// 				...prev,
-	// 				[name]: selectedFile,
-	// 			}));
-
-	// 			setPreviews((prev) => ({
-	// 				...prev,
-	// 				[name]:
-	// 					selectedFile.type === "application/pdf"
-	// 						? "/assets/img/pdf.png" // путь в public
-	// 						: URL.createObjectURL(selectedFile),
-	// 			}));
-	// 		}
-	// 	};
-	// }
 	function handleChange(label: string, index?: number) {
 		return (e: ChangeEvent<HTMLInputElement>) => {
 			if (e.target.files && e.target.files[0]) {
@@ -112,20 +90,32 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 
 			setStatus("success");
 			setUploadProgress(100);
+			toast({
+				variant: "success",
+				title: "Well done!",
+				description: "All files uploaded successfully.",
+			});
 		} catch (error) {
 			setStatus("error");
 			setUploadProgress(0);
 			console.error(error);
+			toast({
+				variant: "error",
+				title: "Uh oh! Something went wrong.",
+				description: "There was a problem with uploading files on server.",
+				action: <ToastAction altText='Try again'>Please try again</ToastAction>,
+			});
 		}
 	}
 
-	// Функция для добавления дополнительных инпутов
 	function addExtraInput(label: string) {
 		setExtraInputs((prev) => ({
 			...prev,
 			[label]: (prev[label] || 0) + 1, // Увеличиваем количество инпутов для конкретного label
 		}));
 	}
+
+
 
 	return (
 		<div className='space-y-6'>
@@ -143,7 +133,9 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 										<AccordionTrigger>
 											<p className='text-base underline'>{`${detailObj.id} ${detailObj.label}`}</p>
 										</AccordionTrigger>
-										<AccordionContent><p>{ detailObj.tooltip}</p></AccordionContent>
+										<AccordionContent>
+											<p className='whitespace-pre-line'>{detailObj.tooltip}</p>
+										</AccordionContent>
 									</AccordionItem>
 								</Accordion>
 							</>
@@ -338,33 +330,23 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 				<div className='space-y-2'>
 					<div className='h-2.5 w-full rounded-full bg-gray-200'>
 						<div
-							className='h-2.5 rounded-full bg-blue-600 transition-all duration-300'
+							className='h-3.5 rounded-full bg-[#488aec] transition-all duration-300'
 							style={{ width: `${uploadProgress}%` }}></div>
 					</div>
-					<p className='text-sm text-gray-600'>
-						{uploadProgress}% upload progress
+					<p className='text-base font-extrabold text-gray-700 text-center uppercase'>
+						upload progress {uploadProgress}%
 					</p>
 				</div>
 			)}
 
 			{Object.values(files).length > 0 && status !== "uploading" && (
-				<div className="flex justify-center">
+				<div className='flex justify-center'>
 					<button
 						onClick={handleFileUpload}
 						className='max-w-[250px] justify-center min-w-[250px] flex bg-[#ec4848] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
-						Upload All
+						Upload All Files
 					</button>
 				</div>
-			)}
-
-			{status === "success" && (
-				<p className='text-sm text-green-600'>
-					All files uploaded successfully!
-				</p>
-			)}
-
-			{status === "error" && (
-				<p className='text-sm text-red-600'>Upload failed. Please try again.</p>
 			)}
 		</div>
 	);
