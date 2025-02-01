@@ -143,7 +143,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 										<AccordionTrigger>
 											<p className='text-base underline'>{`${detailObj.id} ${detailObj.label}`}</p>
 										</AccordionTrigger>
-										<AccordionContent>{detailObj.tooltip}</AccordionContent>
+										<AccordionContent><p>{ detailObj.tooltip}</p></AccordionContent>
 									</AccordionItem>
 								</Accordion>
 							</>
