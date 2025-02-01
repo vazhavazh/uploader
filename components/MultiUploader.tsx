@@ -167,6 +167,24 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 		}
 	}
 
+	const canUploadAll = details
+		.filter((detailObj) => !detailObj.title)
+		.every((detailObj) => {
+			// Проверяем, есть ли файл для основного инпута
+			if (files[detailObj.label]) {
+				return true;
+			}
+
+			// Проверяем, есть ли файлы для дополнительных инпутов
+			for (let i = 0; i < (extraInputs[detailObj.label] || 0); i++) {
+				if (files[`${detailObj.label}_${i}`]) {
+					return true;
+				}
+			}
+
+			return false;
+		});
+
 	return (
 		<div className='space-y-6'>
 			{details.map((detailObj) => {
@@ -346,7 +364,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 							<div className='flex justify-center'>
 								<button
 									onClick={() => addExtraInput(detailObj.label)}
-									className='max-w-[250px] justify-center min-w-[250px] flex bg-[#4dec48] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
+									className='max-w-[250px] justify-center min-w-[250px] flex bg-[#ffe30f] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
 									<svg
 										className='w-5 h-5'
 										aria-hidden='true'
@@ -389,12 +407,24 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 				</div>
 			)}
 
-			{Object.values(files).length > 0 && status !== "uploading" && (
+			{/* {Object.values(files).length > 0 && status !== "uploading" && (
 				<div className='flex justify-center'>
 					<button
 						onClick={handleFileUpload}
 						className='max-w-[250px] justify-center min-w-[250px] flex bg-[#ec4848] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
 						Upload All Files
+					</button>
+				</div>
+			)} */}
+			{status !== "uploading" && (
+				<div className='flex justify-center'>
+					<button
+						disabled={!canUploadAll}
+						onClick={handleFileUpload}
+						className={`${
+							canUploadAll ? "bg-[#4dec48]" : "bg-gray-400 cursor-not-allowed"
+						} max-w-[250px] justify-center min-w-[250px] flex text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none`}>
+						UPLOAD ALL
 					</button>
 				</div>
 			)}
