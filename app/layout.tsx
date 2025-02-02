@@ -28,9 +28,9 @@ export default function RootLayout({
 		<html lang='en'>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-300`}>
-				<div className='bg-slate-900 fixed z-50 top-0 w-full h-16 md:h-20'>
+				<div className='bg-slate-900 fixed z-50 top-0 w-full h-16 md:h-20 xl:h-[7rem]'>
 					<div className='flex justify-center'>
-						<div className='w-16 md:w-20'>
+						<div className='w-16 md:w-20 xl:w-[7rem]'>
 							<SeaCloud />
 						</div>
 					</div>

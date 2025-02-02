@@ -187,40 +187,49 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 		});
 
 	return (
-		<div className='space-y-6'>
+		<div className='space-y-6 xl:space-y-8'>
 			{details.map((detailObj) => {
 				return (
 					<div
 						key={detailObj.label}
 						className={cn(
-							"space-y-3",
+							"space-y-3 xl:space-y-6",
 							previews[detailObj.label] &&
-								"md:flex flex-wrap gap-5 items-center"
+								"md:flex flex-wrap justify-center gap-5 xl:gap-9 items-center"
 						)}>
 						{detailObj.tooltip ? (
 							<>
 								<Accordion
 									type='single'
-									collapsible>
+									collapsible
+									className='w-full'>
 									<AccordionItem value='item-1'>
 										<AccordionTrigger>
-											<p className='text-base underline'>{`${detailObj.id} ${detailObj.label}`}</p>
+											<p
+												className={cn(
+													"text-base underline w-full xl:text-xl",
+													previews[detailObj.label] && "text-center"
+												)}>{`${detailObj.id} ${detailObj.label}`}</p>
 										</AccordionTrigger>
 										<AccordionContent>
-											<p className='whitespace-pre-line'>{detailObj.tooltip}</p>
+											<p className='whitespace-pre-line xl:text-base'>{detailObj.tooltip}</p>
 										</AccordionContent>
 									</AccordionItem>
 								</Accordion>
 							</>
 						) : (
-							<p className="w-full">{`${detailObj.id} ${detailObj.label}`}</p>
+							<p
+								className={cn(
+									"w-full xl:text-xl",
+									previews[detailObj.label] && "text-center"
+								)}>{`${detailObj.id} ${detailObj.label}`}</p>
 						)}
 
 						<div
 							className={cn(
 								"block  ",
 								previews[detailObj.label] &&
-									"border-2 border-slate-900 rounded-xl p-1 md:p-3 md:w-[calc(50%-10px)] md:h-[22rem] md:flex md:flex-col "
+									"border-2 border-slate-900 rounded-xl p-1 md:p-3 md:w-[calc(50%-10px)] xl:w-[calc(32%-10px)] md:h-[22rem] md:flex md:flex-col lg:h-[24rem]"
 							)}>
 							{/* Отображение имени файла для основного инпута */}
 							{fileNames[detailObj.label] && (
@@ -232,7 +241,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 							{previews[detailObj.label] && (
 								<div className='mb-4'>
 									{/* <p className='text-sm'>Preview:</p> */}
-									<div className='relative h-[200px]  w-auto'>
+									<div className='relative h-[200px] lg:h-[16rem]  w-auto'>
 										<Image
 											src={previews[detailObj.label]}
 											alt={`Selected file ${detailObj.label}`}
@@ -246,7 +255,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 							{/* Основной инпут */}
 							{!detailObj.title && (
 								<div className='flex justify-center mt-auto'>
-									<label className='min-w-[250px] max-w-[250px] justify-center flex bg-[#488aec] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
+									<label className='min-w-[250px] max-w-[250px] xl:min-w-[22rem] xl:max-w-[22rem] xl:text-base  justify-center flex bg-[#488aec] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
 										<input
 											className='hidden opacity-0'
 											type='file'
@@ -301,7 +310,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 									className={cn(
 										"block  ",
 										previews[`${detailObj.label}_${index}`] &&
-											"border-2 border-slate-900 rounded-xl p-1 md:p-3 md:w-[calc(50%-10px)] md:h-[22rem] md:flex md:flex-col"
+											"border-2 border-slate-900 rounded-xl p-1 md:p-3 md:w-[calc(50%-10px)] xl:w-[calc(32%-10px)] md:h-[22rem] md:flex md:flex-col lg:h-[24rem]"
 									)}>
 									{/* Отображение имени файла для дополнительного инпута */}
 									{fileNames[`${detailObj.label}_${index}`] && (
@@ -314,7 +323,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 
 									{previews[`${detailObj.label}_${index}`] && (
 										<div className='mb-4'>
-											<div className='relative h-[200px]  w-auto'>
+											<div className='relative h-[200px] lg:h-[16rem]  w-auto'>
 												<Image
 													src={previews[`${detailObj.label}_${index}`]}
 													alt={`Selected file ${detailObj.label}_${index}`}
@@ -327,7 +336,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 
 									{/*Дополнительный инпут */}
 									<div className='flex justify-center mt-auto'>
-										<label className='min-w-[250px] max-w-[250px] justify-center flex bg-[#488aec] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
+										<label className='min-w-[250px] max-w-[250px] xl:min-w-[22rem] xl:max-w-[22rem] xl:text-base  justify-center flex bg-[#488aec] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
 											<input
 												className='hidden opacity-0'
 												type='file'
@@ -380,7 +389,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 							<div className='flex justify-center'>
 								<button
 									onClick={() => addExtraInput(detailObj.label)}
-									className='max-w-[250px] justify-center min-w-[250px] flex bg-[#ffe30f] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
+									className='max-w-[250px] justify-center min-w-[250px] xl:min-w-[22rem] xl:max-w-[22rem] xl:text-base flex bg-[#ffe30f] text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'>
 									<svg
 										className='w-5 h-5'
 										aria-hidden='true'
@@ -439,7 +448,7 @@ export const MultiUploader = ({ details }: UploaderProps) => {
 						onClick={handleFileUpload}
 						className={`${
 							canUploadAll ? "bg-[#4dec48]" : "bg-gray-400 cursor-not-allowed"
-						} max-w-[250px] justify-center min-w-[250px] flex text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none`}>
+						} max-w-[250px] justify-center min-w-[250px] xl:min-w-[22rem] xl:max-w-[22rem] xl:text-base flex text-white text-xs leading-4 font-bold text-center cursor-pointer uppercase align-middle items-center select-none gap-3 shadow-[0_4px_6px_-1px_#488aec31,0_2px_4px_-1px_#488aec17] transition-all duration-[0.6s] ease-[ease] px-6 py-3 rounded-lg border-[none] hover:shadow-[0_10px_15px_-3px_#488aec4f,0_4px_6px_-2px_#488aec17] focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none`}>
 						UPLOAD ALL
 					</button>
 				</div>
